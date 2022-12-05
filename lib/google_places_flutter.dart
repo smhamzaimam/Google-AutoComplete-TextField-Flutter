@@ -60,7 +60,7 @@ class _GooglePlaceAutoCompleteTextFieldState
                     this._overlayEntry!.remove();
                   }
                   widget.textEditingController.clear();
-                  //widget.onClearSearch();
+                  widget.onClearSearch();
                 }),
             hintText: "1013. NYWD, Wallington Street.",
             contentPadding: EdgeInsets.symmetric(horizontal: 10)),
