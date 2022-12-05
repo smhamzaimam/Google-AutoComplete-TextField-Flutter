@@ -54,18 +54,16 @@ class _GooglePlaceAutoCompleteTextFieldState
         decoration: InputDecoration(
             border: InputBorder.none,
             fillColor: Colors.white,
-            suffixIcon: alPredictions.isNotEmpty
-                ? GestureDetector(
-                    child: Icon(Icons.close),
-                    onTap: () {
-                      if (this._overlayEntry != null) {
-                        widget.textEditingController.clear();
-                        alPredictions.clear();
-                        this._overlayEntry!.remove();
-                        widget.clearSearchResult();
-                      }
-                    })
-                : null,
+            suffixIcon: GestureDetector(
+                child: Icon(Icons.close),
+                onTap: () {
+                  if (this._overlayEntry != null) {
+                    widget.textEditingController.clear();
+                    alPredictions.clear();
+                    this._overlayEntry!.remove();
+                    widget.clearSearchResult();
+                  }
+                }),
             hintText: "1013. NYWD, Wallington Street.",
             contentPadding: EdgeInsets.symmetric(horizontal: 10)),
         style: widget.textStyle,
