@@ -7,11 +7,10 @@ import 'package:dio/dio.dart';
 import 'package:rxdart/rxdart.dart';
 
 class GooglePlaceAutoCompleteTextField extends StatefulWidget {
-  InputDecoration inputDecoration;
   ItemClick? itmClick;
   GetPlaceDetailswWithLatLng? getPlaceDetailWithLatLng;
-  Function clearSearchResult;
   bool isLatLngRequired = true;
+  Function() onClearSearch;
   TextStyle textStyle;
   String googleAPIKey;
   int debounceTime = 600;
@@ -21,10 +20,9 @@ class GooglePlaceAutoCompleteTextField extends StatefulWidget {
   GooglePlaceAutoCompleteTextField({
     required this.textEditingController,
     required this.googleAPIKey,
+    required this.onClearSearch,
     this.debounceTime: 600,
-    this.inputDecoration: const InputDecoration(),
     this.itmClick,
-    required this.clearSearchResult,
     this.isLatLngRequired = true,
     this.textStyle: const TextStyle(),
     this.countries,
@@ -57,16 +55,17 @@ class _GooglePlaceAutoCompleteTextFieldState
             suffixIcon: GestureDetector(
                 child: Icon(Icons.close),
                 onTap: () {
+                  this.alPredictions.clear();
                   if (this._overlayEntry != null) {
-                    widget.textEditingController.clear();
-                    alPredictions.clear();
                     this._overlayEntry!.remove();
-                    widget.clearSearchResult();
                   }
+                  widget.textEditingController.clear();
+                  //widget.onClearSearch();
                 }),
             hintText: "1013. NYWD, Wallington Street.",
             contentPadding: EdgeInsets.symmetric(horizontal: 10)),
         style: widget.textStyle,
+        autocorrect: true,
         controller: widget.textEditingController,
         onChanged: (string) => (subject.add(string)),
       ),
@@ -113,6 +112,8 @@ class _GooglePlaceAutoCompleteTextFieldState
 
     this._overlayEntry = null;
     this._overlayEntry = this._createOverlayEntry();
+    Overlay.of(context)!.insert(this._overlayEntry!);
+    //   this._overlayEntry.markNeedsBuild();
   }
 
   @override
@@ -181,6 +182,8 @@ class _GooglePlaceAutoCompleteTextFieldState
   }
 
   Future<Response?> getPlaceDetailsFromPlaceId(Prediction prediction) async {
+    //String key = GlobalConfiguration().getString('google_maps_key');
+
     var url =
         "https://maps.googleapis.com/maps/api/place/details/json?placeid=${prediction.placeId}&key=${widget.googleAPIKey}";
     Response response = await Dio().get(
@@ -191,6 +194,7 @@ class _GooglePlaceAutoCompleteTextFieldState
 
     prediction.lat = placeDetails.result!.geometry!.location!.lat.toString();
     prediction.lng = placeDetails.result!.geometry!.location!.lng.toString();
+
     widget.getPlaceDetailWithLatLng!(prediction);
   }
 }
