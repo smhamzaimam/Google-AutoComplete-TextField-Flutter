@@ -62,7 +62,7 @@ class _GooglePlaceAutoCompleteTextFieldState
                   widget.textEditingController.clear();
                   widget.onClearSearch();
                 }),
-            hintText: "1013. NYWD, Wallington Street.",
+            hintText: "Borneostraat 87, 2585 TT Den Haag, Netherlands",
             contentPadding: EdgeInsets.symmetric(horizontal: 10)),
         style: widget.textStyle,
         autocorrect: true,
